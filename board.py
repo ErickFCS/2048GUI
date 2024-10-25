@@ -108,6 +108,11 @@ class Board:
         self.cells = [[0 for v in range(self.size[1])] for i in range(self.size[0])]
         self.loser = False
         self.addNum()
+    def maxBlock(self):
+        a = []
+        for i in self.cells:
+            a.append(max(i))
+        return max(a)
     
 if __name__ == "__main__":
     def printBoard(board):

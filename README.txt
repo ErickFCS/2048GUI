@@ -1,0 +1,1 @@
+For the last version to work, it is necessary to update the database credentials. Additionally, create a table named score with the fields: "name" and "score" in a database called minecraft2048. In this table, there must always be at least 3 values so that they are displayed when the game ends.
