@@ -82,25 +82,39 @@ def cEnd(globs):
     mycursor = mydb.cursor()
     mycursor.execute("use minecraft2048")
     
-    
-    
+    if globs["finished"] == 1:
+        globs["finished"] = 0
+        mycursor.execute(f"INSERT INTO score (nombre, puntaje) values ('{globs['user_text']}', {globs['board'].maxBlock()});")
+        mydb.commit()
+        return
+        
+    input_rect = pg.Rect(0, 0, WINDOW_SIZE[0], TEXT_SIZE + 10)
+    input_rect.center = (WINDOW_SIZE[0] // 2, WINDOW_SIZE[1] // 2 - 2 * TEXT_SIZE)
+
     mycursor.execute("select * from score ORDER BY puntaje DESC limit 3")
     playerList = list(mycursor)
     player1text = f"{playerList[0][1]}: {playerList[0][2]}"
     player2text = f"{playerList[1][1]}: {playerList[1][2]}"
     player3text = f"{playerList[2][1]}: {playerList[2][2]}"
-    text = globs[f"arial{TEXT_SIZE}Font"].render("You Lose!!!", True, TEXT_COLOR)
+    inputText = globs[f"arial{TEXT_SIZE}Font"].render(
+        globs["user_text"], True, TEXT_COLOR
+    )
+    text = globs[f"arial{TEXT_SIZE}Font"].render(f"Hiciste: {globs['board'].maxBlock()} puntos", True, TEXT_COLOR)
     player1 = globs[f"arial{TEXT_SIZE}Font"].render(player1text, True, TEXT_COLOR)
     player2 = globs[f"arial{TEXT_SIZE}Font"].render(player2text, True, TEXT_COLOR)
     player3 = globs[f"arial{TEXT_SIZE}Font"].render(player3text, True, TEXT_COLOR)
+    inputTextRect = inputText.get_rect()
     textRect = text.get_rect()
     player1Rect = player1.get_rect()
     player2Rect = player2.get_rect()
     player3Rect = player3.get_rect()
+    inputTextRect.center = (WINDOW_SIZE[0] // 2, WINDOW_SIZE[1] // 2 - 2 * TEXT_SIZE)
     textRect.center = (WINDOW_SIZE[0] // 2, WINDOW_SIZE[1] // 2 - TEXT_SIZE)
     player1Rect.center = (WINDOW_SIZE[0] // 2, WINDOW_SIZE[1] // 2)
     player2Rect.center = (WINDOW_SIZE[0] // 2, WINDOW_SIZE[1] // 2 + TEXT_SIZE)
     player3Rect.center = (WINDOW_SIZE[0] // 2, WINDOW_SIZE[1] // 2 + 2 * TEXT_SIZE)
+    pg.draw.rect(globs["window"], TEXTINPUT_COLOR, input_rect)
+    globs["window"].blit(inputText, inputTextRect)
     globs["window"].blit(text, textRect)
     globs["window"].blit(player1, player1Rect)
     globs["window"].blit(player2, player2Rect)
